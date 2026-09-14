@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panamá en el comercio exterior ecuatoriano</title>
+<meta name="description" content="Informe técnico, base de datos y código en Stata sobre el comercio no petrolero entre Ecuador y Panamá, 2021-2025.">
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://mariosaeteros90.github.io/aap-ecuador-panama/">
+<meta property="og:site_name" content="Mario Saeteros Pérez">
+<meta property="og:title" content="Panamá en el comercio exterior ecuatoriano">
+<meta property="og:description" content="Qué mide el registro bilateral y sobre qué puede operar un Acuerdo de Alcance Parcial. Informe técnico, base de datos y código en Stata, 2021-2025.">
+<meta property="og:image" content="https://mariosaeteros90.github.io/aap-ecuador-panama/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Importaciones no petroleras desde Panamá en 2025: 77,8 millones de dólares de origen panameño frente a 612,9 millones de procedencia panameña.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Panamá en el comercio exterior ecuatoriano">
+<meta name="twitter:description" content="Qué mide el registro bilateral y sobre qué puede operar un Acuerdo de Alcance Parcial.">
+<meta name="twitter:image" content="https://mariosaeteros90.github.io/aap-ecuador-panama/preview.png">
+
+<style>
+  :root{
+    --tinta:#1a1a18; --tinta2:#4a4945; --linea:#e0ded8; --fondo:#fbfaf7;
+    --panel:#ffffff; --azul:#2a78d6; --naranja:#eb6834;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --tinta:#eceae5; --tinta2:#a5a29b; --linea:#33322e; --fondo:#151513;
+           --panel:#1d1d1a; --azul:#6ba6ee; --naranja:#f08a5f; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--fondo); color:var(--tinta);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:780px; margin:0 auto; padding:0 24px 80px}
+  header{border-bottom:1px solid var(--linea); padding:56px 0 32px; margin-bottom:40px}
+  .kicker{font-size:12.5px; letter-spacing:.09em; text-transform:uppercase;
+          color:var(--tinta2); margin:0 0 14px}
+  h1{font-size:30px; line-height:1.25; font-weight:600; margin:0 0 10px; letter-spacing:-.01em}
+  .sub{font-size:17px; color:var(--tinta2); margin:0 0 18px}
+  .autor{font-size:15px; color:var(--tinta2); margin:0}
+  h2{font-size:14px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+     color:var(--tinta2); margin:48px 0 18px; padding-bottom:8px; border-bottom:1px solid var(--linea)}
+  p{margin:0 0 16px}
+  a{color:var(--azul)}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+          gap:1px; background:var(--linea); border:1px solid var(--linea);
+          border-radius:6px; overflow:hidden; margin:32px 0 0}
+  .cifra{background:var(--panel); padding:18px 20px}
+  .cifra b{display:block; font-size:25px; font-weight:600; letter-spacing:-.01em; margin-bottom:4px}
+  .cifra span{font-size:13.5px; color:var(--tinta2); line-height:1.45; display:block}
+
+  /* informe: la pieza principal */
+  .informe{display:flex; gap:28px; align-items:flex-start; background:var(--panel);
+           border:1px solid var(--linea); border-radius:8px; padding:26px; margin:8px 0 0}
+  .informe .tapa{flex:0 0 168px}
+  .informe .tapa img{width:100%; height:auto; display:block; border:1px solid var(--linea);
+                     border-radius:3px}
+  .informe .txt{flex:1 1 auto; min-width:0}
+  .informe h3{margin:0 0 8px; font-size:19px; font-weight:600; line-height:1.35}
+  .informe p{font-size:14.5px; color:var(--tinta2); margin:0 0 18px}
+  .boton{display:inline-block; background:var(--azul); color:#fff; text-decoration:none;
+         font-size:15px; font-weight:600; padding:11px 22px; border-radius:6px}
+  .boton:hover{filter:brightness(.93)}
+  .meta{font-size:13px; color:var(--tinta2); margin:12px 0 0}
+  @media (max-width:560px){
+    .informe{flex-direction:column}
+    .informe .tapa{flex:0 0 auto; align-self:flex-start; width:150px}
+  }
+
+  .desc{list-style:none; padding:0; margin:0; border:1px solid var(--linea);
+        border-radius:6px; overflow:hidden; background:var(--panel)}
+  .desc li{display:flex; align-items:baseline; gap:16px; padding:15px 20px;
+           border-bottom:1px solid var(--linea)}
+  .desc li:last-child{border-bottom:none}
+  .desc .n{flex:1 1 auto; min-width:0}
+  .desc .n strong{font-weight:600; display:block; font-size:15.5px}
+  .desc .n em{font-style:normal; color:var(--tinta2); font-size:13.5px}
+  .desc .l{flex:0 0 auto; font-size:13.5px; white-space:nowrap}
+
+  figure{margin:26px 0; padding:0}
+  figure img{width:100%; height:auto; display:block; border:1px solid var(--linea); border-radius:6px}
+  figcaption{font-size:13px; color:var(--tinta2); margin-top:10px}
+  pre{background:var(--panel); border:1px solid var(--linea); border-radius:6px;
+      padding:16px 18px; overflow-x:auto; font-size:13.5px; line-height:1.6; margin:0 0 16px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  footer{margin-top:56px; padding-top:24px; border-top:1px solid var(--linea);
+         font-size:13.5px; color:var(--tinta2)}
+  footer p{margin:0 0 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Acuerdo de Alcance Parcial Ecuador &ndash; Panam&aacute;</p>
+  <h1>Panam&aacute; en el comercio exterior ecuatoriano</h1>
+  <p class="sub">Qu&eacute; mide el registro bilateral y sobre qu&eacute; puede operar un
+  Acuerdo de Alcance Parcial</p>
+  <p class="autor">Mario Saeteros P&eacute;rez &middot; septiembre de 2026</p>
+</header>
+
+<p>El an&aacute;lisis se hizo a prop&oacute;sito de la firma de los T&eacute;rminos de Referencia del
+Acuerdo de Alcance Parcial entre los dos pa&iacute;ses, el 4 de septiembre de 2026. Cubre el
+per&iacute;odo 2021&ndash;2025 con el registro del Banco Central del Ecuador y usa el registro
+del Instituto Nacional de Estad&iacute;stica y Censo de Panam&aacute; como verificaci&oacute;n
+externa. Todo lo que aparece en el informe se calcula con el c&oacute;digo y la base que
+est&aacute;n en esta p&aacute;gina.</p>
+
+<p>El punto de partida es una distinci&oacute;n que la discusi&oacute;n p&uacute;blica suele pasar
+por alto. Panam&aacute; aparece como un socio grande porque concentra el tr&aacute;nsito de
+hidrocarburos y porque buena parte de lo que llega desde all&aacute; no se produce all&aacute;.
+Separando el petr&oacute;leo y separando el pa&iacute;s de origen del pa&iacute;s de procedencia,
+lo que queda es una relaci&oacute;n comercial mucho m&aacute;s peque&ntilde;a, pero
+superavitaria, diversificada y creciente.</p>
+
+<div class="cifras">
+  <div class="cifra"><b>106,4 M</b><span>exportaciones no petroleras a Panam&aacute;, 2025</span></div>
+  <div class="cifra"><b>77,8 M</b><span>importaciones de origen paname&ntilde;o, 2025</span></div>
+  <div class="cifra"><b>1,37</b><span>d&oacute;lares exportados por cada d&oacute;lar importado</span></div>
+  <div class="cifra"><b>7,9 a 1</b><span>procedencia sobre origen, 2025</span></div>
+</div>
+
+<h2>El informe</h2>
+
+<div class="informe">
+  <div class="tapa">
+    <a href="informe/informe_panama_ecuador_saeteros_sept2026.pdf">
+      <img src="portada_informe.png" alt="Portada del informe t&eacute;cnico">
+    </a>
+  </div>
+  <div class="txt">
+    <h3>Panam&aacute; en el comercio exterior ecuatoriano</h3>
+    <p>Catorce secciones con la metodolog&iacute;a declarada: conciliaci&oacute;n con las
+    cifras p&uacute;blicas, la brecha entre origen y procedencia por sector y por producto,
+    el registro paname&ntilde;o como verificaci&oacute;n externa, composici&oacute;n y
+    concentraci&oacute;n, m&aacute;rgenes y supervivencia, y una nota sobre por qu&eacute; el
+    &iacute;ndice de comercio intraindustrial no mide aqu&iacute; lo que dice medir.</p>
+    <a class="boton" href="informe/informe_panama_ecuador_saeteros_sept2026.pdf">Descargar el informe (PDF)</a>
+    <p class="meta">15 p&aacute;ginas &middot; 15 cuadros &middot; 7 gr&aacute;ficos</p>
+  </div>
+</div>
+
+<figure>
+  <img src="resultados/graficos/p1_balanza_no_petrolera.png"
+       alt="Balanza comercial no petrolera con Panamá, 2021 a 2025">
+  <figcaption>Balanza no petrolera, millones de d&oacute;lares FOB. Importaciones por
+  pa&iacute;s de origen. Fuente: Banco Central del Ecuador, c&aacute;lculos propios.</figcaption>
+</figure>
+
+<h2>Los datos y el c&oacute;digo</h2>
+
+<ul class="desc">
+  <li>
+    <span class="n"><strong>Base de datos</strong>
+      <em>Base_Final.xlsx, la fuente &uacute;nica de todos los c&aacute;lculos</em></span>
+    <span class="l"><a href="datos/Base_Final.xlsx">XLSX</a></span>
+  </li>
+  <li>
+    <span class="n"><strong>Programaci&oacute;n en Stata</strong>
+      <em>master.do y siete m&oacute;dulos, en la carpeta do/</em></span>
+    <span class="l"><a href="https://github.com/mariosaeteros90/aap-ecuador-panama/tree/main/do">Ver</a></span>
+  </li>
+  <li>
+    <span class="n"><strong>Salidas calculadas</strong>
+      <em>Cinco archivos Excel con los cuadros y once gr&aacute;ficos</em></span>
+    <span class="l"><a href="https://github.com/mariosaeteros90/aap-ecuador-panama/tree/main/resultados">Ver</a></span>
+  </li>
+</ul>
+
+<h2>Reproducir los resultados</h2>
+
+<p>Se necesita Stata 17 o superior. Hay una sola l&iacute;nea que editar, la ruta en
+<code>do/master.do</code>:</p>
+
+<pre><code>global path "ruta/donde/quedo/el/repositorio"</code></pre>
+
+<p>Con eso, corriendo <code>master.do</code> completo el programa reconstruye las bases de
+trabajo desde el Excel y regenera las cinco salidas y los once gr&aacute;ficos. El
+m&oacute;dulo <code>00_prepara_bases.do</code> corre cinco controles de integridad sobre la
+base y se detiene si alguno falla.</p>
+
+<h2>Nota metodol&oacute;gica</h2>
+
+<p>El an&aacute;lisis mantiene separadas las importaciones por pa&iacute;s de origen y por
+pa&iacute;s de procedencia en todos los cuadros. Una preferencia arancelaria opera sobre
+mercanc&iacute;a originaria, que es el primer universo. El segundo describe la
+funci&oacute;n log&iacute;stica de Panam&aacute;. Las exportaciones se registran siempre por
+destino declarado y no admiten esa distinci&oacute;n, de modo que no se construye ninguna
+balanza que mezcle los dos criterios.</p>
+
+<footer>
+  <p>C&oacute;digo bajo licencia MIT. Informe, base de datos y salidas bajo
+  <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a>.</p>
+  <p>Cita sugerida: Saeteros P&eacute;rez, M. (2026). <em>Panam&aacute; en el comercio exterior
+  ecuatoriano: qu&eacute; mide el registro bilateral y sobre qu&eacute; puede operar un Acuerdo
+  de Alcance Parcial</em>. Repositorio de datos y programaci&oacute;n.</p>
+  <p><a href="https://github.com/mariosaeteros90/aap-ecuador-panama">Ver el repositorio en GitHub</a></p>
+</footer>
+
+</div>
+</body>
+</html>
